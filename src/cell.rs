@@ -56,6 +56,18 @@ mod tests {
     assert_eq!(cell.get(), 20);
   }
 
+  #[test]
+  fn cell_obj() {
+    #[derive(Debug, Copy, Clone, PartialEq)]
+    struct Color(u8, u8, u8, u8);
+
+    let color = Cell::new(Color(0, 0, 0, 0));
+    assert_eq!(color.get(), Color(0, 0, 0, 0));
+
+    color.set(Color(128, 128, 128, 1));
+    assert_eq!(color.get(), Color(128, 128, 128, 1));
+  }
+
   // #[test]
   // #[should_panic(expected = "Cell is not thread safe.")]
   // fn it_does_not_work() {

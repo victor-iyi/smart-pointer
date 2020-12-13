@@ -1,0 +1,43 @@
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[co]
+*$py.class
+
+# Distribution / packaging
+.Python
+build/
+dist/
+*.egg-info
+venv/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+
+### Rust template
+target
+Cargo.lock
+
+
+### VisualStudioCode template
+.vscode/*
+# !.vscode/settings.json
+# !.vscode/tasks.json
+# !.vscode/launch.json
+# !.vscode/extensions.json
+
+
+### IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+
+### Mac template
+.DS_Store
+
+
+### Project specific
+

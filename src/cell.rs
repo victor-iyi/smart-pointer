@@ -1,5 +1,6 @@
 use std::cell::UnsafeCell;
 
+/// A mutable memory location.
 pub struct Cell<T> {
   value: UnsafeCell<T>,
 }
@@ -8,12 +9,33 @@ pub struct Cell<T> {
 // unsafe impl<T> Sync for Cell<T> {}
 
 impl<T> Cell<T> {
+  /// Creates a new Cell containing the given value.
+  ///
+  /// # Examples
+  ///
+  /// ```
+  ///
+  /// use ptr::cell::Cell;
+  ///
+  /// let c = Cell::new(5);
+  /// ```
   pub fn new(value: T) -> Self {
     Self {
       value: UnsafeCell::new(value),
     }
   }
 
+  /// Sets the contained value.
+  ///
+  /// # Examples
+  /// ```
+  ///
+  /// use ptr::cell::Cell;
+  ///
+  /// let c = Cell::new(5);
+  ///
+  /// c.set(10);
+  /// ```
   pub fn set(&self, value: T) {
     // SAFETY NOTE:
     // We know no one else is concurrently mutating `self.value` (because of `!Sync`).
@@ -23,6 +45,17 @@ impl<T> Cell<T> {
     }
   }
 
+  /// Returns a copy of the contained value.
+  ///
+  /// # Examples
+  ///
+  /// ```
+  ///
+  /// use ptr::cell::Cell;
+  ///
+  /// let c = Cell::new(5);
+  /// assert_eq!(c.get(), 5);
+  /// ```
   pub fn get(&self) -> T
   where
     T: Copy,

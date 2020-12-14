@@ -1,3 +1,2 @@
-#[allow(dead_code)]
-mod cell;
-mod refcell;
+pub mod cell;
+pub mod refcell;

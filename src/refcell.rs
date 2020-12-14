@@ -11,6 +11,12 @@ impl std::fmt::Debug for BorrowError {
   }
 }
 
+impl std::fmt::Display for BorrowError {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.write_str("already mutably borrowed")
+  }
+}
+
 impl Default for BorrowError {
   fn default() -> Self {
     Self { _private: () }
@@ -31,6 +37,12 @@ impl Default for BorrowMutError {
 impl std::fmt::Debug for BorrowMutError {
   fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
     f.debug_struct("BorrowMutError").finish()
+  }
+}
+
+impl std::fmt::Display for BorrowMutError {
+  fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+    f.write_str("already borrowed")
   }
 }
 
@@ -166,7 +178,9 @@ impl<T> RefCell<T> {
   /// let b = c.borrow(); // this causes a panic
   /// ```
   pub fn borrow(&self) -> Ref<'_, T> {
-    self.try_borrow().expect("Already mutably borrowed.")
+    self
+      .try_borrow()
+      .expect(&format!("{}", BorrowError::default()))
   }
 
   /// Immutably borrows the wrapped value, returning an error if the value is currently mutably borrowed.
@@ -247,7 +261,9 @@ impl<T> RefCell<T> {
   /// let b = c.borrow_mut();  //this causes a panic.
   /// ````
   pub fn borrow_mut(&self) -> RefMut<'_, T> {
-    self.try_borrow_mut().expect("Already borrowed.")
+    self
+      .try_borrow_mut()
+      .expect(&format!("{}", BorrowMutError::default()))
   }
 
   /// Mutably borrows the wrapped value, returning an error if the value is currently borrowed.
@@ -303,7 +319,7 @@ mod tests {
   }
 
   #[test]
-  #[should_panic(expected = "Already mutably borrowed.: BorrowError")]
+  #[should_panic(expected = "already mutably borrowed: BorrowError")]
   fn panic_borrow() {
     let c = RefCell::new(5);
 
@@ -334,7 +350,7 @@ mod tests {
   }
 
   #[test]
-  #[should_panic(expected = "Already borrowed.: BorrowMutError")]
+  #[should_panic(expected = "already borrowed: BorrowMutError")]
   fn panic_borrow_mut() {
     let c = RefCell::new(5);
     let _m = c.borrow();

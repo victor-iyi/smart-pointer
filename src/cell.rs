@@ -102,7 +102,7 @@ impl<T> From<T> for Cell<T> {
 }
 
 // Nightly only: It is however implied by `UnsafeCell`.
-// unsafe impl<T> Sync for Cell<T> {}
+// unsafe impl<T> !Sync for Cell<T> {}
 
 impl<T> Cell<T> {
   /// Creates a new `Cell` containing the given `value`.
@@ -236,7 +236,7 @@ impl<T: Copy> Cell<T> {
   /// let five = c.get();
   /// ```
   pub fn get(&self) -> T {
-    // SAFETY:
+    // SAFETY: This could cause data races but `Cell` is `!Sync`.
     // We know no one else is modifying this value, since only this thread can mutate. (because `!Sync`).
     // and executing only this function. i.e. not mutating the value.
     unsafe { *self.value.get() }
@@ -258,6 +258,21 @@ impl<T: ?Sized> Cell<T> {
     self.value.get()
   }
 
+  /// Returns a mutable reference to the underlying data.
+  ///
+  /// This call borrows `Cell` mutably (at compile-time) which guarantees
+  /// that we possess the only reference.
+  ///
+  /// # Example
+  ///
+  /// ```
+  /// use ptr::cell::Cell;
+  ///
+  /// let mut c = Cell::new(5);
+  /// *c.get_mut() += 1;
+  ///
+  /// assert_eq!(c.get(), 6);
+  /// ```
   pub fn get_mut(&mut self) -> &mut T {
     // SAFETY: This can cause data race when called from separate threads, but `Cell` is `!Sync`,
     // so it won't happen and `&mut` guarantees unique access.
@@ -277,6 +292,8 @@ impl<T: ?Sized> Cell<T> {
   ///
   /// assert_eq!(slice_cell.len(), 3);
   /// ```
+  ///
+  /// See also [`as_slice_of_cells`](#method.as_slice_of_cells)
   pub fn from_mut(t: &mut T) -> &Cell<T> {
     // SAFETY: `&mut` ensures unique access.
     unsafe { &*(t as *mut T as *const Cell<T>) }
@@ -297,6 +314,8 @@ impl<T> Cell<[T]> {
   ///
   /// assert_eq!(slice_cell.len(), 3);
   /// ```
+  ///
+  /// See also [`from_mut`](#method.from_mut)
   pub fn as_slice_of_cells(&self) -> &[Cell<T>] {
     // SAFETY: `Cell<T>` has memory layout as `T`.
     unsafe { &*(self as *const Cell<[T]> as *const [Cell<T>]) }
@@ -309,7 +328,7 @@ mod tests {
 
   #[test]
   fn new() {
-    let c = Cell::new(5);
+    let _c = Cell::new(5);
   }
 
   #[test]

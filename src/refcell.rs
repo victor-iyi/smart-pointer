@@ -1,7 +1,5 @@
 use crate::cell::Cell;
 
-use std::cell::UnsafeCell;
-
 /// An error returned by [`RefCell::try_borrow`](struct@RefCell.html#method.try_borrow).
 pub struct BorrowError {
   _private: (),
@@ -113,7 +111,7 @@ impl<T> std::ops::DerefMut for RefMut<'_, T> {
 
 /// Reference cell.
 pub struct RefCell<T> {
-  value: UnsafeCell<T>,
+  value: std::cell::UnsafeCell<T>,
   state: Cell<RefState>,
 }
 
@@ -128,7 +126,7 @@ impl<T> RefCell<T> {
   /// ```
   pub fn new(value: T) -> Self {
     Self {
-      value: UnsafeCell::new(value),
+      value: std::cell::UnsafeCell::new(value),
       state: Cell::new(RefState::UnShared),
     }
   }
@@ -291,11 +289,7 @@ mod tests {
 
   #[test]
   fn new_refcell() {
-    let c = RefCell::new(5);
-
-    // SAFETY NOTE: It's okay to retrieve the raw pointer
-    // because shared/mutable references are controlled.
-    assert_eq!(unsafe { *c.value.get() }, 5);
+    let _c = RefCell::new(5);
   }
 
   #[test]

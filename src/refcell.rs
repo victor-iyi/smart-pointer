@@ -1,9 +1,7 @@
 use crate::cell::Cell;
 
 /// An error returned by [`RefCell::try_borrow`](struct@RefCell.html#method.try_borrow).
-pub struct BorrowError {
-  _private: (),
-}
+pub struct BorrowError;
 
 impl std::fmt::Debug for BorrowError {
   fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -17,22 +15,8 @@ impl std::fmt::Display for BorrowError {
   }
 }
 
-impl Default for BorrowError {
-  fn default() -> Self {
-    Self { _private: () }
-  }
-}
-
 /// An error returned by [`RefCell::try_borrow`](struct@RefCell.html#method.try_borrow_mut).
-pub struct BorrowMutError {
-  _private: (),
-}
-
-impl Default for BorrowMutError {
-  fn default() -> Self {
-    Self { _private: () }
-  }
-}
+pub struct BorrowMutError;
 
 impl std::fmt::Debug for BorrowMutError {
   fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -178,9 +162,7 @@ impl<T> RefCell<T> {
   /// let b = c.borrow(); // this causes a panic
   /// ```
   pub fn borrow(&self) -> Ref<'_, T> {
-    self
-      .try_borrow()
-      .expect(&format!("{}", BorrowError::default()))
+    self.try_borrow().expect(&format!("{}", BorrowError))
   }
 
   /// Immutably borrows the wrapped value, returning an error if the value is currently mutably borrowed.
@@ -223,7 +205,7 @@ impl<T> RefCell<T> {
         Ok(Ref { refcell: self })
       }
       // We cannot have exclusive reference.
-      RefState::Exclusive => Err(BorrowError::default()),
+      RefState::Exclusive => Err(BorrowError),
     }
   }
 
@@ -261,9 +243,7 @@ impl<T> RefCell<T> {
   /// let b = c.borrow_mut();  //this causes a panic.
   /// ````
   pub fn borrow_mut(&self) -> RefMut<'_, T> {
-    self
-      .try_borrow_mut()
-      .expect(&format!("{}", BorrowMutError::default()))
+    self.try_borrow_mut().expect(&format!("{}", BorrowMutError))
   }
 
   /// Mutably borrows the wrapped value, returning an error if the value is currently borrowed.
@@ -293,7 +273,7 @@ impl<T> RefCell<T> {
       // No other references have been given out since state would have been Shared or Exclusive.
       Ok(RefMut { refcell: self })
     } else {
-      Err(BorrowMutError::default())
+      Err(BorrowMutError)
     }
   }
 }

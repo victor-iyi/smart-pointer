@@ -1,6 +1,6 @@
 use crate::cell::Cell;
 
-/// An error returned by [`RefCell::try_borrow`](struct@RefCell.html#method.try_borrow).
+/// An error returned by [`RefCell::try_borrow`](struct.RefCell.html#method.try_borrow).
 pub struct BorrowError;
 
 impl std::fmt::Debug for BorrowError {
@@ -15,7 +15,7 @@ impl std::fmt::Display for BorrowError {
   }
 }
 
-/// An error returned by [`RefCell::try_borrow`](struct@RefCell.html#method.try_borrow_mut).
+/// An error returned by [`RefCell::try_borrow`](struct.RefCell.html#method.try_borrow_mut).
 pub struct BorrowMutError;
 
 impl std::fmt::Debug for BorrowMutError {
@@ -45,7 +45,8 @@ enum RefState {
   Exclusive,
 }
 
-/// Ref represents the reference to the value of `RefCell`.
+/// Wraps a borrowed reference to a value in a [`RefCell`](struct.RefCell.html) box.
+/// A wrapper type for an immutably borrowed value from a [`RefCell<T>`](struct.RefCell.html).
 pub struct Ref<'refcell, T> {
   refcell: &'refcell RefCell<T>,
 }
@@ -72,7 +73,7 @@ impl<T> std::ops::Deref for Ref<'_, T> {
   }
 }
 
-/// RefMut represents a mutable reference to the value of `RefCell`.
+/// A wrapper type for a mutably borrowed value from a [`RefCell<T>`](struct.RefCell.html).
 pub struct RefMut<'refcell, T> {
   refcell: &'refcell RefCell<T>,
 }
@@ -85,6 +86,7 @@ impl<T> Drop for RefMut<'_, T> {
     }
   }
 }
+
 impl<T> std::ops::Deref for RefMut<'_, T> {
   type Target = T;
 
@@ -105,7 +107,7 @@ impl<T> std::ops::DerefMut for RefMut<'_, T> {
   }
 }
 
-/// Reference cell.
+/// A mutable memory location with dynamically checked borrow rules.
 pub struct RefCell<T> {
   value: std::cell::UnsafeCell<T>,
   state: Cell<RefState>,
@@ -116,7 +118,7 @@ impl<T> RefCell<T> {
   ///
   /// # Examples
   /// ```
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new(5);
   /// ```
@@ -142,7 +144,7 @@ impl<T> RefCell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -154,7 +156,7 @@ impl<T> RefCell<T> {
   /// An example of panic:
   ///
   /// ```should_panic
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -174,7 +176,7 @@ impl<T> RefCell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -224,7 +226,7 @@ impl<T> RefCell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new("hello".to_owned());
   ///
@@ -235,7 +237,7 @@ impl<T> RefCell<T> {
   /// An example of panic:
   ///
   /// ```should_panic
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new(5);
   /// let m = c.borrow();
@@ -255,7 +257,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::refcell::RefCell;
+  /// use ptr::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///

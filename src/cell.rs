@@ -6,7 +6,7 @@
 /// In other words, it enables "interior mutability".
 ///
 /// ```
-/// use ptr::cell::Cell;
+/// use ptr::Cell;
 ///
 /// struct SomeStruct {
 ///   regular_field: u8,
@@ -49,7 +49,7 @@ impl<T: Default> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   /// let five = c.take();
@@ -63,6 +63,7 @@ impl<T: Default> Cell<T> {
 }
 
 impl<T: PartialEq + Copy> PartialEq for Cell<T> {
+  #[inline]
   fn eq(&self, other: &Self) -> bool {
     self.get() == other.get()
   }
@@ -110,12 +111,12 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  ///
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   /// ```
   // TODO: Learn more about `const fn`.
+  #[inline]
   pub const fn new(value: T) -> Self {
     Self {
       value: std::cell::UnsafeCell::new(value),
@@ -127,13 +128,13 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  ///
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   ///
   /// c.set(10);
   /// ```
+  #[inline]
   pub fn set(&self, val: T) {
     let old = self.replace(val);
     drop(old);
@@ -145,7 +146,7 @@ impl<T> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c1 = Cell::new(5i32);
   /// let c2 = Cell::new(10i32);
@@ -154,6 +155,7 @@ impl<T> Cell<T> {
   /// assert_eq!(c1.get(), 10);
   /// assert_eq!(c2.get(), 5);
   /// ```
+  #[inline]
   pub fn swap(&self, other: &Self) {
     // Pointing to the same object.
     if std::ptr::eq(self, other) {
@@ -171,7 +173,7 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let cell = Cell::new(5);
   ///
@@ -190,7 +192,7 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   /// let five = c.into_inner();
@@ -208,7 +210,7 @@ impl<T: Copy> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   /// let new = c.update(|x| x + 1);
@@ -216,6 +218,7 @@ impl<T: Copy> Cell<T> {
   /// assert_eq!(new, 6);
   /// assert_eq!(c.get(), 6);
   /// ```
+  #[inline]
   pub fn update(&self, f: impl FnOnce(T) -> T) -> T {
     let old = self.get();
     let new = f(old);
@@ -228,13 +231,13 @@ impl<T: Copy> Cell<T> {
   /// # Examples
   ///
   /// ```
-  ///
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   ///
   /// let five = c.get();
   /// ```
+  #[inline]
   pub fn get(&self) -> T {
     // SAFETY: This could cause data races but `Cell` is `!Sync`.
     // We know no one else is modifying this value, since only this thread can mutate. (because `!Sync`).
@@ -249,11 +252,12 @@ impl<T: ?Sized> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let c = Cell::new(5);
   /// let p = c.as_ptr();
   /// ```
+  #[inline]
   pub const fn as_ptr(&self) -> *mut T {
     self.value.get()
   }
@@ -266,13 +270,14 @@ impl<T: ?Sized> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let mut c = Cell::new(5);
   /// *c.get_mut() += 1;
   ///
   /// assert_eq!(c.get(), 6);
   /// ```
+  #[inline]
   pub fn get_mut(&mut self) -> &mut T {
     // SAFETY: This can cause data race when called from separate threads, but `Cell` is `!Sync`,
     // so it won't happen and `&mut` guarantees unique access.
@@ -284,7 +289,7 @@ impl<T: ?Sized> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let slice: &mut [i32] = &mut [1, 2, 3];
   ///let cell_slice: &Cell<[i32]> = Cell::from_mut(slice);
@@ -294,6 +299,7 @@ impl<T: ?Sized> Cell<T> {
   /// ```
   ///
   /// See also [`as_slice_of_cells`](#method.as_slice_of_cells)
+  #[inline]
   pub fn from_mut(t: &mut T) -> &Cell<T> {
     // SAFETY: `&mut` ensures unique access.
     unsafe { &*(t as *mut T as *const Cell<T>) }
@@ -306,7 +312,7 @@ impl<T> Cell<[T]> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::cell::Cell;
+  /// use ptr::Cell;
   ///
   /// let slice: &mut [i32] = &mut [1, 2, 3];
   /// let cell_slice: &Cell<[i32]> = Cell::from_mut(slice);

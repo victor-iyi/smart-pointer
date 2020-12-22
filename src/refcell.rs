@@ -164,7 +164,9 @@ impl<T> RefCell<T> {
   /// let b = c.borrow(); // this causes a panic
   /// ```
   pub fn borrow(&self) -> Ref<'_, T> {
-    self.try_borrow().expect(&format!("{}", BorrowError))
+    self
+      .try_borrow()
+      .unwrap_or_else(|_| panic!("{}", BorrowError))
   }
 
   /// Immutably borrows the wrapped value, returning an error if the value is currently mutably borrowed.
@@ -245,7 +247,9 @@ impl<T> RefCell<T> {
   /// let b = c.borrow_mut();  //this causes a panic.
   /// ````
   pub fn borrow_mut(&self) -> RefMut<'_, T> {
-    self.try_borrow_mut().expect(&format!("{}", BorrowMutError))
+    self
+      .try_borrow_mut()
+      .unwrap_or_else(|_| panic!("{}", BorrowMutError))
   }
 
   /// Mutably borrows the wrapped value, returning an error if the value is currently borrowed.
@@ -301,7 +305,7 @@ mod tests {
   }
 
   #[test]
-  #[should_panic(expected = "already mutably borrowed: BorrowError")]
+  #[should_panic(expected = "already mutably borrowed")]
   fn panic_borrow() {
     let c = RefCell::new(5);
 
@@ -332,7 +336,7 @@ mod tests {
   }
 
   #[test]
-  #[should_panic(expected = "already borrowed: BorrowMutError")]
+  #[should_panic(expected = "already borrowed")]
   fn panic_borrow_mut() {
     let c = RefCell::new(5);
     let _m = c.borrow();

@@ -53,7 +53,7 @@
 //!
 //! use ptr::{RefCell, RefMut};
 //!
-//! fn main() {
+//! # fn main() {
 //!     let shared_map: Rc<RefCell<_>> = Rc::new(RefCell::new(HashMap::new()));
 //!     // Create a new block to limit the scope of the dynamic borrow
 //!     {
@@ -69,7 +69,7 @@
 //!     // This is the major hazard of using `RefCell`.
 //!     let total: i32 = shared_map.borrow().values().sum();
 //!     println!("{}", total);
-//! }
+//! # }
 //! ```
 //!
 //!

@@ -168,6 +168,7 @@
 //!
 mod cell;
 mod refcell;
+mod rc;
 
 pub use cell::Cell;
 pub use refcell::{BorrowError, BorrowMutError, Ref, RefCell, RefMut};

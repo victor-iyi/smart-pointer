@@ -80,7 +80,17 @@ jobs:
           command: test
           args: --workspace
 
+      - name: Clean unused artifacts
+        uses: actions-rs/cargo@v1
+        with:
+          command: sweep
+          args: --file
 
+  doc:
+    name: Deploy Docs
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Build documentation for all crates in the workspace
         uses: actions-rs/cargo@v1
         with:
@@ -95,12 +105,6 @@ jobs:
         env:
           GITHUB_DEPLOY_KEY: ${{ secrets.GITHUB_DEPLOY_KEY }}
         if: matrix.rust == 'stable' && github.ref == 'refs/heads/master'
-
-      - name: Clean unused artifacts
-        uses: actions-rs/cargo@v1
-        with:
-          command: sweep
-          args: --file
 
   fmt:
     name: Rustfmt

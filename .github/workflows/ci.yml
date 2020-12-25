@@ -141,7 +141,7 @@ jobs:
           override: true
           components: clippy
 
-      - Clean artifacts
+      - name: Clean artifacts
         uses: actions-rs/cargo@v1
         with:
           command: install

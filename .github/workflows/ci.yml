@@ -1,4 +1,5 @@
 name: CI
+
 on:
   push:
     branches:
@@ -29,7 +30,7 @@ jobs:
           profile: minimal
           override: true
 
-      - name: Install cargo sweep
+      - name: Install cargo-sweep
         uses: actions-rs/cargo@v1
         with:
           command: install
@@ -56,10 +57,10 @@ jobs:
 
       - name: Register artifacts
         uses: actions-rs/cargo@v1
-        with:
-          command: sweep
-          args: --stamp
-
+        run: cargo sweep --stamp
+        # with:
+        #   command: sweep
+        #   args: --stamp
 
      - name: Build without default features
         uses: actions-rs/cargo@v1
@@ -84,7 +85,7 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: doc
-          args: --all --document-private-items --no-deps
+          args: --workspace --document-private-items --no-deps
 
       - name: Upload documentation to GitHub Pages
         run: |
@@ -181,7 +182,6 @@ jobs:
         with:
           command: sweep
           args: --file
-
 
   end-success:
     name: bors build finished

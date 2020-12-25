@@ -94,7 +94,7 @@ jobs:
           (cd target/doc && /tmp/deploy)
         env:
           GITHUB_DEPLOY_KEY: ${{ secrets.GITHUB_DEPLOY_KEY }}
-        if: matrix.rust == 'stable' && github.ref == 'refs/he
+        if: matrix.rust == 'stable' && github.ref == 'refs/heads/master'
 
       - name: Clean unused artifacts
         uses: actions-rs/cargo@v1
@@ -141,7 +141,7 @@ jobs:
           override: true
           components: clippy
 
-      - Clean artifacts
+      - name: Clean artifacts
         uses: actions-rs/cargo@v1
         with:
           command: install

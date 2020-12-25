@@ -66,19 +66,19 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --no-default-features --workspace --locked
+          args: --no-default-features --workspace
 
       - name: Build smart-pointer with all features
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --all-features --workspace --locked
+          args: --all-features --workspace
 
       - name: Execute tests for all crates in the workspace
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --workspace --locked
+          args: --workspace
 
 
       - name: Build documentation for all crates in the workspace
@@ -175,7 +175,7 @@ jobs:
       - uses: actions-rs/cargo@v1
         with:
           command: clippy
-          args: --all-targets --workspace --locked
+          args: --all-targets --workspace
 
       - name: Clean unused artifacts
         uses: actions-rs/cargo@v1

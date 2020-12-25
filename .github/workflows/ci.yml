@@ -24,6 +24,7 @@ jobs:
           fetch-depth: 1
 
       - name: Install Rust toolchain
+        id: install
         uses: actions-rs/toolchain@v1
         with:
           toolchain: ${{ matrix.rust }}
@@ -57,12 +58,11 @@ jobs:
 
       - name: Register artifacts
         uses: actions-rs/cargo@v1
-        run: cargo sweep --stamp
-        # with:
-        #   command: sweep
-        #   args: --stamp
+        with:
+          command: sweep
+          args: --stamp
 
-     - name: Build without default features
+      - name: Build without default features
         uses: actions-rs/cargo@v1
         with:
           command: build

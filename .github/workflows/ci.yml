@@ -91,6 +91,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout the source code
+        uses: actions/checkout@master
+
+      - name: Install Rust toolchain and component
+        id: install
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
       - name: Build documentation for all crates in the workspace
         uses: actions-rs/cargo@v1
         with:

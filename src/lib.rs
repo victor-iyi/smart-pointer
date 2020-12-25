@@ -2,34 +2,34 @@
 //!
 //! Rust memory safety is based on this rule: Given an object `T`, it is only possible to have one of the following:
 //!
-//! - Having several immutable references (`&T`) to the object (also known as *aliasing*).
-//! - Having one mutable reference (`&mut T`) to the object (also known as *mutability*).
+//! - Having several immutable references (`&T`) to the object (also known as **aliasing**).
+//! - Having one mutable reference (`&mut T`) to the object (also known as **mutability**).
 //!
 //! This is enforced by the Rust compiler. However, there are situations where this rule is not flexible enough.
 //! Sometimes it is required to have multiple references to an object and yet mutate it.
 //!
 //! Shareable mutable containers exist to permit mutability in a controlled manner, even in the presence of aliasing.
-//! Both [`Cell<T>`](struct.Cell.html) and [`RefCell<T>`](struct.RefCell.html) allow doing this in a single-threaded way.
-//! However, neither `Cell<T>` nor `RefCell<T>`
-//! are thread safe (they do not implement `Sync`). If you need to do aliasing and mutation between multiple threads it is
-//! possible to use `Mutex`, `RwLock` or atomic types.
+//! Both [`Cell<T>`][`Cell`] and [`RefCell<T>`][`RefCell`] allow doing this in a single-threaded way.
+//! However, neither [`Cell<T>`][`Cell`] nor [`RefCell<T>`][`RefCell`]
+//! are thread safe (they do not implement [`Sync`]). If you need to do aliasing and mutation between multiple threads it is
+//! possible to use [`Mutex`], [`RwLock`] or [atomic types][atomic].
 //!
-//! Values of the `Cell<T>` and `RefCell<T>` types may be mutated through shared references (i.e. the common `&T` type),
-//! whereas most Rust types can only be mutated through unique (`&mut T`) references. We say that `Cell<T>` and `RefCell<T>`
+//! Values of the [`Cell<T>`][`Cell`] and [`RefCell<T>`][`RefCell`] types may be mutated through shared references (i.e. the common `&T` type),
+//! whereas most Rust types can only be mutated through unique (`&mut T`) references. We say that [`Cell<T>`][`Cell`] and [`RefCell<T>`][`RefCell`]
 //! provide 'interior mutability', in contrast with typical Rust types that exhibit 'inherited mutability'.
 //!
-//! Cell types come in two flavors: `Cell<T>` and `RefCell<T>`. `Cell<T>` implements interior mutability by moving values in and out of the `Cell<T>`.
-//! To use references instead of values, one must use the `RefCell<T>` type, acquiring a write lock before mutating.
-//! `Cell<T>` provides methods to retrieve and change the current interior value:
+//! Cell types come in two flavors: [`Cell<T>`][`Cell`] and [`RefCell<T>`][`RefCell`]. [`Cell<T>`][`Cell`] implements interior mutability by moving values in and out of the [`Cell<T>`][`Cell`].
+//! To use references instead of values, one must use the [`RefCell<T>`][`RefCell`] type, acquiring a write lock before mutating.
+//! [`Cell<T>`][`Cell`] provides methods to retrieve and change the current interior value:
 //!
-//! - For types that implement `Copy`, the [`get`](struct.Cell.html#method.get) method retrieves the current interior value.
-//! - For types that implement `Default`, the [`take`](struct.Cell.html#method.take) method replaces the current interior value with `Default::default()` and returns the replaced value.
-//! - For all types, the [`replace`](struct.Cell.html#method.replace) method replaces the current interior value and returns the replaced value and the [`into_inner`](struct.Cell.html#method.into_inner) method consumes the `Cell<T>` and returns the interior value.
-//! Additionally, the [`set`](struct.Cell.html#method.set) method replaces the interior value, dropping the replaced value.
+//! - For types that implement [`Copy`][std::marker::Copy], the [`get`][crate::Cell::get] method retrieves the current interior value.
+//! - For types that implement [`Default`][std::default::Default], the [`take`][crate::Cell::take] method replaces the current interior value with [`Default::default()`][std::default::Default::default] and returns the replaced value.
+//! - For all types, the [`replace`][crate::Cell::replace] method replaces the current interior value and returns the replaced value and the [`into_inner`][crate::Cell::into_inner] method consumes the [`Cell<T>`][`Cell`] and returns the interior value.
+//! Additionally, the [`set`][crate::Cell::set] method replaces the interior value, dropping the replaced value.
 //!
-//! `RefCell<T>` uses Rust's lifetimes to implement 'dynamic borrowing', a process whereby one can claim temporary, exclusive, mutable access to the inner value.
-//! Borrows for `RefCell<T>`s are tracked 'at runtime', unlike Rust's native reference types which are entirely tracked statically, at compile time.
-//! Because `RefCell<T>` borrows are dynamic it is possible to attempt to borrow a value that is already mutably borrowed; when this happens it results in thread panic.
+//! [`RefCell<T>`][`RefCell`] uses Rust's lifetimes to implement 'dynamic borrowing', a process whereby one can claim temporary, exclusive, mutable access to the inner value.
+//! Borrows for [`RefCell<T>`][`RefCell`]s are tracked 'at runtime', unlike Rust's native reference types which are entirely tracked statically, at compile time.
+//! Because [`RefCell<T>`][`RefCell`] borrows are dynamic it is possible to attempt to borrow a value that is already mutably borrowed; when this happens it results in thread panic.
 //!
 //! # When to choose interior mutability
 //!
@@ -37,15 +37,15 @@
 //!
 //! - Introducing mutability 'inside' of something immutable
 //! - Implementation details of logically-immutable methods.
-//! - Mutating implementations of `Clone`.
+//! - Mutating implementations of [`Clone`].
 //!
 //! # Introducing mutability 'inside' of something immutable
 //!
-//! Many shared smart pointer types, including `Rc<T>` and `Arc<T>`, provide containers that can be cloned and shared between multiple parties.
+//! Many shared smart pointer types, including [`Rc<T>`][`Rc`] and [`Arc<T>`][`Arc`], provide containers that can be cloned and shared between multiple parties.
 //! Because the contained values may be multiply-aliased, they can only be borrowed with `&`, not `&mut`.
 //! Without cells it would be impossible to mutate data inside of these smart pointers at all.
 //!
-//! It's very common then to put a `RefCell<T>` inside shared pointer types to reintroduce mutability:
+//! It's very common then to put a [`RefCell<T>`][`RefCell`] inside shared pointer types to reintroduce mutability:
 //!
 //! ```
 //! use std::collections::HashMap;
@@ -53,7 +53,8 @@
 //!
 //! use ptr::{RefCell, RefMut};
 //!
-//! # fn main() {
+//! # #[allow(clippy::needless_doctest_main)]
+//! fn main() {
 //!     let shared_map: Rc<RefCell<_>> = Rc::new(RefCell::new(HashMap::new()));
 //!     // Create a new block to limit the scope of the dynamic borrow
 //!     {
@@ -69,12 +70,12 @@
 //!     // This is the major hazard of using `RefCell`.
 //!     let total: i32 = shared_map.borrow().values().sum();
 //!     println!("{}", total);
-//! # }
+//! }
 //! ```
 //!
 //!
-//! Note that this example uses `Rc<T>` and not `Arc<T>`. `RefCell<T>`s are for single-threaded scenarios.
-//! Consider using `RwLock<T>` or `Mutex<T>` if you need shared mutability in a multi-threaded situation.
+//! Note that this example uses [`Rc<T>`][`Rc`] and not [`Arc<T>`][`Arc`]. [`RefCell<T>`][`RefCell`]s are for single-threaded scenarios.
+//! Consider using [`RwLock<T>`][`RwLock`] or [`Mutex<T>`][`Mutex`] if you need shared mutability in a multi-threaded situation.
 //!
 //! # Implementation details of logically-immutable methods
 //!
@@ -108,9 +109,9 @@
 //! # Mutating implementations of `Clone`
 //!
 //! This is simply a special - but common - case of the previous: hiding mutability for operations that appear to be immutable.
-//! The `clone` method is expected to not change the source value, and is declared to take `&self`, not `&mut self`.
-//! Therefore, any mutation that happens in the `clone` method must use cell types.
-//! For example, `Rc<T>` maintains its reference counts within a `Cell<T>`.
+//! The [`clone`] method is expected to not change the source value, and is declared to take `&self`, not `&mut self`.
+//! Therefore, any mutation that happens in the [`clone`] method must use [cell types][crate::cell].
+//! For example, [`Rc<T>`][`Rc`] maintains its reference counts within a [`Cell<T>`][`Cell`].
 //!
 //! ```
 //! use ptr::Cell;
@@ -166,9 +167,20 @@
 //! }
 //! ```
 //!
-mod cell;
-mod refcell;
-mod rc;
+//! [`RefCell`]: crate::refcell::RefCell
+//! [`Cell`]: crate::cell::Cell
+//! [`Rc`]: crate::rc::Rc
+//! [`Clone`]: Clone
+//! [`clone`]: Clone::clone
+//! [`Sync`]: std::marker::Sync
+//! [`Mutex`]: std::sync::Mutex
+//! [`RwLock`]: std::sync::RwLock
+//! [`Arc`]: std::sync::Arc
+//! [atomic]: std::sync::atomic
+pub mod cell;
+pub mod rc;
+pub mod refcell;
 
 pub use cell::Cell;
+pub use rc::{Rc, Weak};
 pub use refcell::{BorrowError, BorrowMutError, Ref, RefCell, RefMut};

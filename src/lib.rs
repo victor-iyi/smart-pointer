@@ -22,10 +22,10 @@
 //! To use references instead of values, one must use the [`RefCell<T>`][`RefCell`] type, acquiring a write lock before mutating.
 //! [`Cell<T>`][`Cell`] provides methods to retrieve and change the current interior value:
 //!
-//! - For types that implement [`Copy`][std::marker::Copy], the [`get`][crate::Cell::get] method retrieves the current interior value.
-//! - For types that implement [`Default`][std::default::Default], the [`take`][crate::Cell::take] method replaces the current interior value with [`Default::default()`][std::default::Default::default] and returns the replaced value.
-//! - For all types, the [`replace`][crate::Cell::replace] method replaces the current interior value and returns the replaced value and the [`into_inner`][crate::Cell::into_inner] method consumes the [`Cell<T>`][`Cell`] and returns the interior value.
-//! Additionally, the [`set`][crate::Cell::set] method replaces the interior value, dropping the replaced value.
+//! - For types that implement [`Copy`], the [`get`] method retrieves the current interior value.
+//! - For types that implement [`Default`], the [`take`] method replaces the current interior value with [`Default::default()`][`default`] and returns the replaced value.
+//! - For all types, the [`replace`] method replaces the current interior value and returns the replaced value and the [`into_inner`] method consumes the [`Cell<T>`][`Cell`] and returns the interior value.
+//! Additionally, the [`set`] method replaces the interior value, dropping the replaced value.
 //!
 //! [`RefCell<T>`][`RefCell`] uses Rust's lifetimes to implement 'dynamic borrowing', a process whereby one can claim temporary, exclusive, mutable access to the inner value.
 //! Borrows for [`RefCell<T>`][`RefCell`]s are tracked 'at runtime', unlike Rust's native reference types which are entirely tracked statically, at compile time.
@@ -73,7 +73,6 @@
 //! }
 //! ```
 //!
-//!
 //! Note that this example uses [`Rc<T>`][`Rc`] and not [`Arc<T>`][`Arc`]. [`RefCell<T>`][`RefCell`]s are for single-threaded scenarios.
 //! Consider using [`RwLock<T>`][`RwLock`] or [`Mutex<T>`][`Mutex`] if you need shared mutability in a multi-threaded situation.
 //!
@@ -106,11 +105,11 @@
 //! ```
 //!
 //!
-//! # Mutating implementations of `Clone`
+//! # Mutating implementations of [`Clone`]
 //!
 //! This is simply a special - but common - case of the previous: hiding mutability for operations that appear to be immutable.
 //! The [`clone`] method is expected to not change the source value, and is declared to take `&self`, not `&mut self`.
-//! Therefore, any mutation that happens in the [`clone`] method must use [cell types][crate::cell].
+//! Therefore, any mutation that happens in the [`clone`] method must use [cell types][cells].
 //! For example, [`Rc<T>`][`Rc`] maintains its reference counts within a [`Cell<T>`][`Cell`].
 //!
 //! ```
@@ -169,14 +168,24 @@
 //!
 //! [`RefCell`]: crate::refcell::RefCell
 //! [`Cell`]: crate::cell::Cell
+//! [cells]: crate::cell
 //! [`Rc`]: crate::rc::Rc
+//! [`get`]: crate::cell::Cell::get
+//! [`set`]: crate::cell::Cell::set
+//! [`take`]: crate::cell::Cell::take
+//! [`replace`]: crate::cell::Cell::replace
+//! [`into_inner`]: crate::cell::Cell::into_inner
+//! [`Default`]: std::default::Default
+//! [`default`]: std::default::Default::default
 //! [`Clone`]: Clone
 //! [`clone`]: Clone::clone
+//! [`Copy`]: std::marker::Copy
 //! [`Sync`]: std::marker::Sync
 //! [`Mutex`]: std::sync::Mutex
 //! [`RwLock`]: std::sync::RwLock
 //! [`Arc`]: std::sync::Arc
 //! [atomic]: std::sync::atomic
+
 pub mod cell;
 pub mod rc;
 pub mod refcell;

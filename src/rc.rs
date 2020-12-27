@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 //! Single-threaded reference-counting pointers. 'Rc' stands for 'Reference Counted'.
 //!
 //! The type [`Rc<T>`][Rc] provides shared ownership of a value of type `T`, allocated in the heap.
@@ -211,9 +213,9 @@ use crate::cell::Cell;
 // interface with otherwise safe [into|from]_raw() of transmutable inner types.
 #[repr(C)]
 struct RcBox<T: ?Sized> {
-    strong: Cell<usize>,
-    weak: Cell<usize>,
-    value: T,
+  strong: Cell<usize>,
+  weak: Cell<usize>,
+  value: T,
 }
 
 /// A single-threaded reference-counting pointer. 'Rc' stands for 'Reference Counted.'
@@ -226,8 +228,8 @@ struct RcBox<T: ?Sized> {
 ///
 /// [get_mut]: #method.get_mut
 pub struct Rc<T: ?Sized> {
-    ptr: std::ptr::NonNull<RcBox<T>>,
-    phantom: std::marker::PhantomData<RcBox<T>>,
+  ptr: std::ptr::NonNull<RcBox<T>>,
+  phantom: std::marker::PhantomData<RcBox<T>>,
 }
 
 // impl<T: ?Sized> !std::marker::Send for Rc<T> {}
@@ -253,13 +255,13 @@ pub struct Rc<T: ?Sized> {
 ///
 /// [`upgrade`]: Weak::upgrade
 pub struct Weak<T> {
-    // This is a `NonNull` to allow optimizing the size of this type in enums,
-    // but it is not necessarily a valid pointer.
-    // `Weak::new` sets this to `usize::MAX` so that it doesn't need
-    // to allocate space on the heap. That's not a value a real pointer
-    // will ever have because RcBox has alignment at least 2.
-    // This is only possible when `T: Sized`; unsized `T` never dangle.
-    ptr: std::ptr::NonNull<RcBox<T>>,
+  // This is a `NonNull` to allow optimizing the size of this type in enums,
+  // but it is not necessarily a valid pointer.
+  // `Weak::new` sets this to `usize::MAX` so that it doesn't need
+  // to allocate space on the heap. That's not a value a real pointer
+  // will ever have because RcBox has alignment at least 2.
+  // This is only possible when `T: Sized`; unsized `T` never dangle.
+  ptr: std::ptr::NonNull<RcBox<T>>,
 }
 
 // impl<T: ?Sized> !std::marker::Send for Weak<T> {}

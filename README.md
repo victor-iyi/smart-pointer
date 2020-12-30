@@ -197,8 +197,8 @@ impl<T: ?Sized> RcBoxPtr<T> for Rc<T> {
 [`into_inner`]: crate::cell::Cell::into_inner
 [`Default`]: std::default::Default
 [`default`]: std::default::Default::default
-[`Clone`]: std::clone::Clone
-[`clone`]: std::clone::Clone::clone
+[`Clone`]: Clone
+[`clone`]: Clone::clone
 [`Copy`]: std::marker::Copy
 [`Sync`]: std::marker::Sync
 [`Mutex`]: std::sync::Mutex

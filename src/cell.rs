@@ -16,7 +16,7 @@
 /// In other words, it enables "interior mutability".
 ///
 /// ```
-/// use ptr::Cell;
+/// use pointer::Cell;
 ///
 /// struct SomeStruct {
 ///   regular_field: u8,
@@ -59,7 +59,7 @@ impl<T: Default> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c = Cell::new(5);
   /// let five = c.take();
@@ -121,7 +121,7 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c = Cell::new(5);
   /// ```
@@ -138,7 +138,7 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c = Cell::new(5);
   ///
@@ -156,7 +156,7 @@ impl<T> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c1 = Cell::new(5i32);
   /// let c2 = Cell::new(10i32);
@@ -183,7 +183,7 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let cell = Cell::new(5);
   ///
@@ -202,7 +202,7 @@ impl<T> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c = Cell::new(5);
   /// let five = c.into_inner();
@@ -220,7 +220,7 @@ impl<T: Copy> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c = Cell::new(5);
   /// let new = c.update(|x| x + 1);
@@ -241,7 +241,7 @@ impl<T: Copy> Cell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let c = Cell::new(5);
   ///
@@ -280,7 +280,7 @@ impl<T: ?Sized> Cell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let mut c = Cell::new(5);
   /// *c.get_mut() += 1;
@@ -322,7 +322,7 @@ impl<T> Cell<[T]> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::Cell;
+  /// use pointer::Cell;
   ///
   /// let slice: &mut [i32] = &mut [1, 2, 3];
   /// let cell_slice: &Cell<[i32]> = Cell::from_mut(slice);

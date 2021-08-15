@@ -129,7 +129,7 @@
 //!
 //! ```
 //! use std::rc::{Rc, Weak};
-//! use ptr::RefCell;
+//! use pointer::RefCell;
 //!
 //! struct Owner {
 //!   name: String,

@@ -51,7 +51,7 @@
 //! use std::collections::HashMap;
 //! use std::rc::Rc;
 //!
-//! use ptr::{RefCell, RefMut};
+//! use pointer::{RefCell, RefMut};
 //!
 //! # #[allow(clippy::needless_doctest_main)]
 //! fn main() {
@@ -83,7 +83,7 @@
 //! or because you must employ mutation to implement a trait method that was originally defined to take `&self`.
 //!
 //! ```
-//! use ptr::RefCell;
+//! use pointer::RefCell;
 //!
 //! struct Graph {
 //!     edges: Vec<(i32, i32)>,
@@ -113,7 +113,7 @@
 //! For example, [`Rc<T>`][`Rc`] maintains its reference counts within a [`Cell<T>`][`Cell`].
 //!
 //! ```
-//! use ptr::Cell;
+//! use pointer::Cell;
 //!
 //! use std::ptr::NonNull;
 //! use std::process::abort;

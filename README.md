@@ -72,7 +72,7 @@ It's very common then to put a [`RefCell<T>`][`RefCell`] inside shared pointer t
 use std::collections::HashMap;
 use std::rc::Rc;
 
-use ptr::{RefCell, RefMut};
+use pointer::{RefCell, RefMut};
 
 fn main() {
     let shared_map: Rc<RefCell<_>> = Rc::new(RefCell::new(HashMap::new()));
@@ -103,7 +103,7 @@ his may be because logically the operation is immutable, but e.g., caching force
 or because you must employ mutation to implement a trait method that was originally defined to take `&self`.
 
 ```rust
-use ptr::RefCell;
+use pointer::RefCell;
 
 struct Graph {
     edges: Vec<(i32, i32)>,
@@ -133,7 +133,7 @@ Therefore, any mutation that happens in the [`clone`] method must use [cell type
 For example, [`Rc<T>`][`Rc`] maintains its reference counts within a [`Cell<T>`][`Cell`].
 
 ```rust
-use ptr::Cell;
+use pointer::Cell;
 
 use std::ptr::NonNull;
 use std::process::abort;

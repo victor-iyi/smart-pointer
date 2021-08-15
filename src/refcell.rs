@@ -29,7 +29,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   /// ```
@@ -46,7 +46,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c  = RefCell::new(5);
   ///
@@ -72,7 +72,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let cell = RefCell::new(5);
   /// let old_value = cell.replace(6);
@@ -95,7 +95,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let cell = RefCell::new(5);
   /// let old_value = cell.replace_with(|&mut old| old + 1);
@@ -126,7 +126,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let cell = RefCell::new(5);
   /// let dest = RefCell::new(6);
@@ -158,7 +158,7 @@ impl<T> RefCell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -170,7 +170,7 @@ impl<T> RefCell<T> {
   /// An example of panic:
   ///
   /// ```should_panic
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -192,7 +192,7 @@ impl<T> RefCell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -240,7 +240,7 @@ impl<T> RefCell<T> {
   /// # Example
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new("hello".to_owned());
   ///
@@ -251,7 +251,7 @@ impl<T> RefCell<T> {
   /// An example of panic:
   ///
   /// ```should_panic
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   /// let m = c.borrow();
@@ -282,7 +282,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   ///
@@ -307,7 +307,7 @@ impl<T> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let mut c = RefCell::new(5);
   /// *c.get_mut() += 1;
@@ -332,7 +332,7 @@ impl<T: Default> RefCell<T> {
   /// # Examples
   ///
   /// ```
-  /// use ptr::RefCell;
+  /// use pointer::RefCell;
   ///
   /// let c = RefCell::new(5);
   /// let five = c.take();
